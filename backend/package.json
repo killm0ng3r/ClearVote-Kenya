@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "seed": "ts-node prisma/seed.ts",
+    "blockchain:setup": "ts-node src/scripts/setupBlockchain.ts setup",
+    "blockchain:check": "ts-node src/scripts/setupBlockchain.ts check",
+    "blockchain:deploy": "ts-node src/scripts/setupBlockchain.ts deploy",
+    "blockchain:test": "ts-node src/scripts/setupBlockchain.ts test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^6.12.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/web3": "^1.0.20",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/node": "^24.1.0",
+    "prisma": "^6.12.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,29 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Root level files to exclude (keep implementation files)
+county.json
+mock-election-data.json
+
+# Backend
+backend/.env
+backend/node_modules/
+backend/package-lock.json
+backend/prisma/dev.db
+backend/src/generated/
+
+# Blockchain
+blockchain/node_modules/
+blockchain/package-lock.json
+blockchain/build/
+
+# Frontend
+frontend/node_modules/
+frontend/package-lock.json
+frontend/dist/
+frontend/build/

@@ -1,0 +1,143 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum Role {
+  ADMIN
+  VOTER
+}
+
+enum PositionType {
+  PRESIDENT
+  GOVERNOR
+  SENATOR
+  WOMEN_REP
+  MP
+  MCA
+}
+
+model County {
+  id             Int            @id
+  name           String         @unique
+  code           Int            @unique
+  constituencies Constituency[]
+  users          User[]
+  positions      Position[]
+  createdAt      DateTime       @default(now())
+}
+
+model Constituency {
+  id        String   @id @default(uuid())
+  name      String
+  countyId  Int
+  county    County   @relation(fields: [countyId], references: [id])
+  wards     Ward[]
+  users     User[]
+  positions Position[]
+  createdAt DateTime @default(now())
+
+  @@unique([name, countyId])
+}
+
+model Ward {
+  id             String       @id @default(uuid())
+  name           String
+  constituencyId String
+  constituency   Constituency @relation(fields: [constituencyId], references: [id])
+  users          User[]
+  positions      Position[]
+  createdAt      DateTime     @default(now())
+
+  @@unique([name, constituencyId])
+}
+
+model User {
+  id             String        @id @default(uuid())
+  name           String
+  email          String        @unique
+  password       String
+  role           Role          @default(VOTER)
+  
+  // Geographical location
+  countyId       Int?
+  county         County?       @relation(fields: [countyId], references: [id])
+  constituencyId String?
+  constituency   Constituency? @relation(fields: [constituencyId], references: [id])
+  wardId         String?
+  ward           Ward?         @relation(fields: [wardId], references: [id])
+  
+  votes          Vote[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Election {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  isPublished Boolean     @default(false)
+  createdBy   String
+  createdAt   DateTime    @default(now())
+
+  positions   Position[]
+  candidates  Candidate[]  // optional shortcut if needed
+  votes       Vote[]
+}
+
+model Position {
+  id           String       @id @default(uuid())
+  title        String
+  positionType PositionType
+  electionId   String
+  election     Election     @relation(fields: [electionId], references: [id])
+  
+  // Geographical scope - only one should be set based on position type
+  countyId       Int?
+  county         County?       @relation(fields: [countyId], references: [id])
+  constituencyId String?
+  constituency   Constituency? @relation(fields: [constituencyId], references: [id])
+  wardId         String?
+  ward           Ward?         @relation(fields: [wardId], references: [id])
+  
+  candidates   Candidate[]
+  createdAt    DateTime     @default(now())
+}
+
+model Candidate {
+  id          String     @id @default(uuid())
+  name        String
+  party       String?
+  bio         String?
+  positionId  String
+  position    Position   @relation(fields: [positionId], references: [id])
+  electionId  String
+  election    Election   @relation(fields: [electionId], references: [id])
+  votes       Vote[]
+}
+
+model Vote {
+  id           String     @id @default(uuid())
+  voterId      String
+  voter        User       @relation(fields: [voterId], references: [id])
+
+  candidateId  String
+  candidate    Candidate  @relation(fields: [candidateId], references: [id])
+
+  electionId   String
+  election     Election   @relation(fields: [electionId], references: [id])
+
+  timestamp    DateTime   @default(now())
+
+  // Allow multiple votes per election (one per position)
+  // The application logic will enforce one vote per position
+  @@index([voterId, electionId]) // Index for performance
+}
