@@ -44,8 +44,8 @@ export const loginUser = async (req: Request, res: Response) => {
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, countyId, constituencyId, wardId } = req.body
 
-  if (!name || !email || !password)
-    return res.status(400).json({ error: 'All fields required' })
+  if (!name || !email || !password || !countyId || !constituencyId || !wardId)
+    return res.status(400).json({ error: 'All fields including location information are required' })
 
   const existing = await prisma.user.findUnique({ where: { email } })
   if (existing)
@@ -53,17 +53,15 @@ export const registerUser = async (req: Request, res: Response) => {
 
   const hashed = await bcrypt.hash(password, 10)
   
-  const userData: any = {
+  const userData = {
     name,
     email,
     password: hashed,
-    role: 'VOTER'
+    role: 'VOTER' as const,
+    countyId: parseInt(countyId),
+    constituencyId,
+    wardId
   }
-  
-  // Add location data if provided
-  if (countyId) userData.countyId = parseInt(countyId)
-  if (constituencyId) userData.constituencyId = constituencyId
-  if (wardId) userData.wardId = wardId
 
   const user = await prisma.user.create({
     data: userData,

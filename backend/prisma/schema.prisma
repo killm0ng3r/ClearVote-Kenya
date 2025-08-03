@@ -66,12 +66,12 @@ model User {
   role           Role          @default(VOTER)
   
   // Geographical location
-  countyId       Int?
-  county         County?       @relation(fields: [countyId], references: [id])
-  constituencyId String?
-  constituency   Constituency? @relation(fields: [constituencyId], references: [id])
-  wardId         String?
-  ward           Ward?         @relation(fields: [wardId], references: [id])
+  countyId       Int
+  county         County        @relation(fields: [countyId], references: [id])
+  constituencyId String
+  constituency   Constituency  @relation(fields: [constituencyId], references: [id])
+  wardId         String
+  ward           Ward          @relation(fields: [wardId], references: [id])
   
   votes          Vote[]
   createdAt      DateTime      @default(now())

@@ -1,10 +1,12 @@
+import heroImage from '../../assets/clearvote-hero-bg.png'
+
 export default function HeroSection() {
   return (
     <section className="relative bg-gray-50 py-24 md:py-36 text-center overflow-hidden">
       <div
         className="absolute inset-0 z-0 opacity-20 bg-cover bg-center"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')",
+          backgroundImage: `url(${heroImage})`,
         }}
       />
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8">

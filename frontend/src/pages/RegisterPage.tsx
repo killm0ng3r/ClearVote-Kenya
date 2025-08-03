@@ -107,12 +107,34 @@ export default function RegisterPage() {
       return
     }
 
+    // Validate location fields
+    if (!selectedCounty) {
+      toast.error("Please select your county")
+      setLoading(false)
+      return
+    }
+
+    if (!selectedConstituency) {
+      toast.error("Please select your constituency")
+      setLoading(false)
+      return
+    }
+
+    if (!selectedWard) {
+      toast.error("Please select your ward")
+      setLoading(false)
+      return
+    }
+
     try {
-      const payload: any = { name, email, password }
-      
-      if (selectedCounty) payload.countyId = selectedCounty
-      if (selectedConstituency) payload.constituencyId = selectedConstituency
-      if (selectedWard) payload.wardId = selectedWard
+      const payload = {
+        name,
+        email,
+        password,
+        countyId: selectedCounty,
+        constituencyId: selectedConstituency,
+        wardId: selectedWard
+      }
 
       const res = await fetch('http://localhost:3002/api/register', {
         method: 'POST',
@@ -229,10 +251,10 @@ export default function RegisterPage() {
             </div>
             <div className="border-t border-gray-200 pt-6">
               <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 tracking-tight">
-                Location (Optional)
+                Location Information
               </h3>
               <p className="text-sm md:text-base text-gray-700 mb-4 leading-relaxed">
-                Select your location to participate in local elections. You can update this later in your profile.
+                Select your location to participate in elections. This information is required for registration.
               </p>
               <div className="space-y-6">
                 <div>
@@ -245,6 +267,7 @@ export default function RegisterPage() {
                     onChange={(e) => setSelectedCounty(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-200 text-gray-700"
                     aria-label="Select your county"
+                    required
                   >
                     <option value="">Select County</option>
                     {counties.map((county) => (
@@ -265,6 +288,7 @@ export default function RegisterPage() {
                       onChange={(e) => setSelectedConstituency(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-200 text-gray-700"
                       aria-label="Select your constituency"
+                      required
                     >
                       <option value="">Select Constituency</option>
                       {constituencies.map((constituency) => (
@@ -286,6 +310,7 @@ export default function RegisterPage() {
                       onChange={(e) => setSelectedWard(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-200 text-gray-700"
                       aria-label="Select your ward"
+                      required
                     >
                       <option value="">Select Ward</option>
                       {wards.map((ward) => (
